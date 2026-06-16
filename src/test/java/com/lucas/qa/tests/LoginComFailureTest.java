@@ -1,5 +1,6 @@
 package com.lucas.qa.tests;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import com.lucas.qa.pages.LoginPage;
 import org.openqa.selenium.WebDriver;
@@ -19,12 +20,20 @@ public class LoginComFailureTest {
         LoginPage loginPage = new LoginPage(driver);
 
         // 4. Executar a ação
-        loginPage.realizaLogin("standard_user", "secret_sau131ce");
+        loginPage.realizaLogin("standard_user", "secret_sauce");
 
-        // 5. Pausa
-        Thread.sleep(20000);
+        // 5. Captura a mensagem de erro exibida na tela
+        String mensagemErro = loginPage.obterMensagemErro();
 
-        // 6. Encerrar navegador
+        // 6. Verifica se a mensagem contém o texto esperado
+        Assertions.assertTrue(
+                mensagemErro.contains("Username and password do not match")
+        );
+
+        // 7. Pausa
+        Thread.sleep(2000);
+
+        // 8. Encerrar navegador
         driver.quit();
     }
 }

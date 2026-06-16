@@ -14,6 +14,14 @@ public class LoginPage {
     private By passwordField = By.id("password");
     private By loginButton = By.id("login-button");
 
+    // Mensagem de erro exibida quando login falaha
+    private By errorMessage = By.cssSelector("[data-test='error']");
+
+    // Retorna o texto da mensagem de erro exibida na tela
+    public String obterMensagemErro(){
+        return driver.findElement(errorMessage).getText();
+    }
+
     // 3. Construtor: Recebe o driver que está vindo do seu teste
     public LoginPage(WebDriver driver){
         this.driver = driver;
@@ -25,4 +33,5 @@ public class LoginPage {
         driver.findElement(passwordField).sendKeys(senha);
         driver.findElement(loginButton).click();
     }
+
 }
