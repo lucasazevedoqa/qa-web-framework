@@ -5,13 +5,15 @@ import org.junit.jupiter.api.Test;
 import com.lucas.qa.pages.LoginPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import com.lucas.qa.drivers.DriverFactory;
 
 public class LoginComSucessoTest {
 
     @Test
     void validarLoginComSucesso() throws InterruptedException {
-        // 1. Inicializar o navegador
-        WebDriver driver = new ChromeDriver();
+
+        // 1. Obtém uma instância do navegador através da fábrica
+        WebDriver driver = DriverFactory.criarDriver();
 
         // 2. Abre o Site
         driver.get("https://www.saucedemo.com/");
@@ -20,7 +22,7 @@ public class LoginComSucessoTest {
         LoginPage loginPage = new LoginPage(driver);
 
         // 4. Executar a ação
-        loginPage.realizaLogin("standard_user", "secret_sa123uce");
+        loginPage.realizaLogin("standard_user", "secret_sauce");
 
         // 5. Obtém a URL atual após login
         String urlAtual = driver.getCurrentUrl();

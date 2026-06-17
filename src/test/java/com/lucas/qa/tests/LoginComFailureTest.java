@@ -2,16 +2,18 @@ package com.lucas.qa.tests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import com.lucas.qa.pages.LoginPage;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import com.lucas.qa.pages.LoginPage;
+import com.lucas.qa.drivers.DriverFactory;
+
 
 public class LoginComFailureTest {
 
     @Test
     void validarLoginComSucesso() throws InterruptedException {
-        // 1. Inicializar o navegador
-        WebDriver driver = new ChromeDriver();
+
+        // 1. Obtém uma instância do navegador através da fábrica
+        WebDriver driver = DriverFactory.criarDriver();
 
         // 2. Abre o Site
         driver.get("https://www.saucedemo.com/");
@@ -20,7 +22,7 @@ public class LoginComFailureTest {
         LoginPage loginPage = new LoginPage(driver);
 
         // 4. Executar a ação
-        loginPage.realizaLogin("standard_user", "secret_sauce");
+        loginPage.realizaLogin("standard_user", "secret_ERRO");
 
         // 5. Captura a mensagem de erro exibida na tela
         String mensagemErro = loginPage.obterMensagemErro();
