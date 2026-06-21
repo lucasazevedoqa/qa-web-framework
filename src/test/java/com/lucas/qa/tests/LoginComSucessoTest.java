@@ -1,34 +1,11 @@
 package com.lucas.qa.tests;
 
+import com.lucas.qa.base.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import com.lucas.qa.pages.LoginPage;
-import org.openqa.selenium.WebDriver;
-import com.lucas.qa.drivers.DriverFactory;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 
-public class LoginComSucessoTest {
-
-    // Driver compartilhado por todos os métodos da classe
-    private WebDriver driver;
-
-    @BeforeEach
-    void setup(){
-
-        // Criar o Navegador
-        driver = DriverFactory.criarDriver();
-
-        // Acessar o Sistema
-        driver.get("https://www.saucedemo.com/");
-    }
-
-    @AfterEach
-    void tearDown(){
-
-        // Fechar o navegador após cada teste
-        driver.quit();
-    }
+public class LoginComSucessoTest extends BaseTest {
 
     @Test
     void validarLoginComSucesso() throws InterruptedException {
@@ -50,9 +27,6 @@ public class LoginComSucessoTest {
                 urlAtual.contains("inventory"),
                 "Falha no login. Usuário não foi redirecionado para a página de produtos."
         );
-
-        // Pausa
-        Thread.sleep(3000);
 
     }
 }
