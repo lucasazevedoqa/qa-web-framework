@@ -1,6 +1,7 @@
 package com.lucas.qa.tests;
 
 import com.lucas.qa.base.BaseTest;
+import com.lucas.qa.config.DadosDeTeste;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import com.lucas.qa.pages.LoginPage;
@@ -15,8 +16,8 @@ public class LoginComSucessoTest extends BaseTest {
 
         //  Executar a ação
         loginPage.realizaLogin(
-                "standard_user",
-                "secret_sauce"
+                DadosDeTeste.USUARIO_VALIDO,
+                DadosDeTeste.SENHA_VALIDA
         );
 
         //  Obtém a URL atual após login

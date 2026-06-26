@@ -1,11 +1,12 @@
 package com.lucas.qa.tests;
 
 import com.lucas.qa.base.BaseTest;
+import com.lucas.qa.config.DadosDeTeste;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import com.lucas.qa.pages.LoginPage;
 
-public class LoginComFailureTest extends BaseTest {
+public class LoginComFalhaTest extends BaseTest {
 
     @Test
     void validarLoginComSucesso() {
@@ -15,8 +16,8 @@ public class LoginComFailureTest extends BaseTest {
 
         // Executar a ação
         loginPage.realizaLogin(
-                "standard_user",
-                "secret_ERRO"
+                DadosDeTeste.USUARIO_VALIDO,
+                DadosDeTeste.SENHA_INVALIDA
         );
 
         // Captura a mensagem de erro exibida na tela
