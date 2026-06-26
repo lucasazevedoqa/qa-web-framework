@@ -25,7 +25,8 @@ public class LoginComFalhaTest extends BaseTest {
 
         // Verifica se a mensagem contém o texto esperado
         Assertions.assertTrue(
-                mensagemErro.contains("Username and password do not match")
+                mensagemErro.contains(DadosDeTeste.MSG_ERRO_LOGIN_INVALIDO),
+                "A mensagem de erro exibida na tela foi diferente da esperada"
         );
 
     }
