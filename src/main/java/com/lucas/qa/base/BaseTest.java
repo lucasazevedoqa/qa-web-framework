@@ -1,5 +1,6 @@
 package com.lucas.qa.base;
 
+import com.lucas.qa.config.Config;
 import com.lucas.qa.drivers.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,7 @@ public class BaseTest {
         driver = DriverFactory.criarDriver();
 
         // Acessar o Sistema
-        driver.get("https://www.saucedemo.com/");
+        driver.get(Config.URL_BASE);
     }
 
     @AfterEach

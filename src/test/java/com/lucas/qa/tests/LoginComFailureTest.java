@@ -8,7 +8,7 @@ import com.lucas.qa.pages.LoginPage;
 public class LoginComFailureTest extends BaseTest {
 
     @Test
-    void validarLoginComSucesso() throws InterruptedException {
+    void validarLoginComSucesso() {
 
         // Criar o objeto da página (aqui conectamos o navegador a página)
         LoginPage loginPage = new LoginPage(driver);
