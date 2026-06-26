@@ -1,5 +1,6 @@
 package com.lucas.qa.pages;
 
+import com.lucas.qa.config.Config;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -20,7 +21,7 @@ public class LoginPage {
     // 3. Construtor
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(Config.TIMEOUT_PADRAO));
     }
 
     // 4. Ações da página

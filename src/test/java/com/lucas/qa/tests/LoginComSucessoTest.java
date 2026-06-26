@@ -5,6 +5,7 @@ import com.lucas.qa.config.DadosDeTeste;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import com.lucas.qa.pages.LoginPage;
+import com.lucas.qa.pages.ProdutosPage;
 
 public class LoginComSucessoTest extends BaseTest {
 
@@ -20,12 +21,17 @@ public class LoginComSucessoTest extends BaseTest {
                 DadosDeTeste.SENHA_VALIDA
         );
 
-        //  Obtém a URL atual após login
-        String urlAtual = driver.getCurrentUrl();
+        // 2. Instancia a nova página de produtos após o redirecionamento
+        ProdutosPage produtosPage = new ProdutosPage(driver);
+
+        // 3. Captura o título da tela
+        String tituloAtual = produtosPage.obterTituloPagina();
+
 
         //  Verificar  se o usuário foi redirecionado para a página de produtos
-        Assertions.assertTrue(
-                urlAtual.contains("inventory"),
+        Assertions.assertEquals(
+                "Products",
+                tituloAtual,
                 "Falha no login. Usuário não foi redirecionado para a página de produtos."
         );
 
