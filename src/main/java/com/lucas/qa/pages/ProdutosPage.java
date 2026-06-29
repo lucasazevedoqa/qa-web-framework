@@ -33,4 +33,8 @@ public class ProdutosPage {
     public String obterQuantidadeCarrinho(){
         return wait.until(ExpectedConditions.visibilityOfElementLocated(badgeCarrinho)).getText();
     }
+
+    public void acessarCarrinho(){
+        wait.until(ExpectedConditions.elementToBeClickable(badgeCarrinho)).click();
+    }
 }
