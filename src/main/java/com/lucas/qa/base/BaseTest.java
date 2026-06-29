@@ -1,32 +1,46 @@
 package com.lucas.qa.base;
 
-import com.lucas.qa.config.Config;
-import com.lucas.qa.drivers.DriverFactory;
-import org.openqa.selenium.WebDriver;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import com.lucas.qa.config.Config;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseTest {
 
-    // Disponivel para todas as classes que herdarem BaseTest
     protected WebDriver driver;
 
     @BeforeEach
-    void setup(){
+    public void setUp() {
+        ChromeOptions options = new ChromeOptions();
 
-        // Criar o Navegador
-        driver = DriverFactory.criarDriver();
+        // 1. Desativa totalmente o gerenciador de senhas e preenchimento automático
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("credentials_enable_service", false);
+        prefs.put("profile.password_manager_enabled", false);
+        options.setExperimentalOption("prefs", prefs);
 
-        // Acessar o Sistema
+        // 2. ARGUMENTOS CRÍTICOS: Desativa detecção de vazamento, notificações e automação visível
+        options.addArguments("--disable-popup-blocking");
+        options.addArguments("--disable-notifications");
+        options.addArguments("--disable-features=LeakDetection"); // Desativa especificamente o alerta de senha vazada
+        options.addArguments("--disable-features=AutofillPasswordLeakDetection"); // Garante o bloqueio da checagem
+        options.addArguments("--password-store=basic"); // Força a ignorar o chaveiro do sistema operacional
+
+        // Inicializa o ChromeDriver com todas as opções
+        driver = new ChromeDriver(options);
+
+        driver.manage().window().maximize();
         driver.get(Config.URL_BASE);
     }
 
     @AfterEach
-    void tearDown(){
-
-        // Fechar o navegador após cada teste
-        driver.quit();
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
-
 }

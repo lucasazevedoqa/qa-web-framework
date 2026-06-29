@@ -10,6 +10,7 @@ import java.time.Duration;
 public class CarrinhoPage {
     private WebDriver driver;
     private WebDriverWait wait;
+    private By botaoCheckout = By.id("checkout");
 
     // Localizador do nome do produto dentro do carrinho
     private By nomeProdutoNoCarrinho = By.cssSelector("[data-test='inventory-item-name']");
@@ -22,5 +23,9 @@ public class CarrinhoPage {
     // Retorna o nome do produto que está aparecendo no carrinho
     public String obterNomeProdutoNoCarrinho() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(nomeProdutoNoCarrinho)).getText();
+    }
+
+    public void iniciarCheckout(){
+        wait.until(ExpectedConditions.elementToBeClickable(botaoCheckout)).click();
     }
 }
