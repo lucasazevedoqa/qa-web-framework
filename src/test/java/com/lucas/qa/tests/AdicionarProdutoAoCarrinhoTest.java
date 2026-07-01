@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
  * Classe responsável por agrupar os cenários de testes funcionais
  * relacionados à inclusão de itens no carrinho e fluxo de compra.
  */
-public class AdicionarProdutoAoCarrinho extends BaseTest {
+public class AdicionarProdutoAoCarrinhoTest extends BaseTest {
 
     /**
      * Valida o fluxo de ponta a ponta da compra de um produto,

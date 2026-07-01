@@ -5,7 +5,6 @@ import com.lucas.qa.utils.ScreenshotUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.WebDriver;
-import java.util.Optional;
 
 public class TestResultExtension implements TestWatcher {
 
