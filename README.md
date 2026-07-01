@@ -12,40 +12,6 @@ Este projeto consiste em um framework de automação de testes End-to-End (E2E) 
 * **Apache Commons IO:** Utilitário para manipulação de arquivos físicos no sistema operacional durante a cópia e salvamento de evidências.
 
 ---
-
-## 📐 Arquitetura do Projeto
-
-O framework segrega a massa de dados, a infraestrutura e as interações das páginas de forma organizada dentro do diretório `src/test/java`:
-
-
-src/test/java/com/lucas/qa/
-│
-├── base/
-│   └── BaseTest.java               # Configuração do ciclo de vida dos testes (Setup e TearDown)
-│
-├── config/
-│   ├── Config.java                 # Constantes de infraestrutura e timeouts globais
-│   └── DadosDeTeste.java           # Massa de dados fixas e mensagens do sistema
-│
-├── drivers/
-│   └── DriverFactory.java          # Fábrica isolada para inicialização do WebDriver
-│
-├── pages/
-│   ├── LoginPage.java              # Ações e mapeamento da tela de autenticação
-│   ├── ProdutosPage.java           # Ações e mapeamento da listagem de produtos e carrinho
-│   ├── CarrinhoPage.java           # Ações e mapeamento do carrinho de compras
-│   ├── CheckoutInformationPage.java# Formulário de entrada dos dados do comprador
-│   ├── CheckoutOverviewPage.java   # Revisão e valores totais do pedido consolidado
-│   └── CheckoutCompletePage.java   # Tela final de確認 de sucesso da compra
-│
-├── tests/
-│   ├── AdicionarProdutoAoCarrinho.java # Fluxo E2E completo de compra bem-sucedida
-│   ├── LoginComSucessoTest.java        # Validação do caminho feliz do login
-│   └── LoginComFalhaTest.java          # Validação de cenário negativo de login com erro
-│
-└── utils/
-    └── ScreenshotUtils.java        # Utilitário para captura de tela e geração de imagens
-
 ## ⚙️ O que cada componente faz?
 
 ### 1. Camada de Infraestrutura (`base` & `drivers`)
@@ -81,3 +47,43 @@ Atualmente, o projeto está estruturado para execução direta através do ecoss
 2. Navegue até o pacote `com.lucas.qa.tests`.
 3. Clique com o botão direito sobre a classe de teste desejada (ou no pacote completo) e selecione a opção **Run 'Tests'** para disparar o motor do JUnit 5.
 4. As evidências visuais em formato `.png` serão geradas automaticamente na pasta `evidencias/` localizada na raiz do projeto ao final de cada execução.
+   
+--- 
+
+## 📐 Arquitetura do Projeto
+
+O framework segrega a massa de dados, a infraestrutura e as interações das páginas de forma organizada dentro do diretório `src/test/java`:
+
+
+O framework segrega a massa de dados, a infraestrutura e as interações das páginas de forma organizada dentro do diretório `src/test/java`:
+
+```text
+src/test/java/com/lucas/qa/
+│
+├── base/
+│   └── BaseTest.java               # Configuração do ciclo de vida dos testes (Setup e TearDown)
+│
+├── config/
+│   ├── Config.java                 # Constantes de infraestrutura e timeouts globais
+│   └── DadosDeTeste.java           # Massa de dados fixas e mensagens do sistema
+│
+├── drivers/
+│   └── DriverFactory.java          # Fábrica isolada para inicialização do WebDriver
+│
+├── pages/
+│   ├── LoginPage.java              # Ações e mapeamento da tela de autenticação
+│   ├── ProdutosPage.java           # Ações e mapeamento da listagem de produtos e carrinho
+│   ├── CarrinhoPage.java           # Ações e mapeamento do carrinho de compras
+│   ├── CheckoutInformationPage.java# Formulário de entrada dos dados do comprador
+│   ├── CheckoutOverviewPage.java   # Revisão e valores totais do pedido consolidado
+│   └── CheckoutCompletePage.java   # Tela final de confirmação de sucesso da compra
+│
+├── tests/
+│   ├── AdicionarProdutoAoCarrinho.java # Fluxo E2E completo de compra bem-sucedida
+│   ├── LoginComSucessoTest.java        # Validação do caminho feliz do login
+│   └── LoginComFalhaTest.java          # Validação de cenário negativo de login com erro
+│
+└── utils/
+    └── ScreenshotUtils.java        # Utilitário para captura de tela e geração de imagens
+
+
