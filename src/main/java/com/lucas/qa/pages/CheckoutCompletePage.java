@@ -8,17 +8,21 @@ import com.lucas.qa.config.Config;
 import java.time.Duration;
 
 public class CheckoutCompletePage {
-    private WebDriver driver;
-    private WebDriverWait wait;
 
-    // CORREÇÃO: Trocando o cssSelector instável pela classe nativa do título de sucesso
-    private By mensagemSucessoHeader = By.className("complete-header");
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+
+    private final By mensagemSucessoHeader = By.className("complete-header");
 
     public CheckoutCompletePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(Config.TIMEOUT_PADRAO));
     }
 
+    /**
+     * Captura o texto do cabeçalho de confirmação exibido após a conclusão do pedido.
+     * @return String contendo a mensagem de sucesso (ex: "Thank you for your order!")
+     */
     public String obterMensagemDeSucesso() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(mensagemSucessoHeader)).getText();
     }

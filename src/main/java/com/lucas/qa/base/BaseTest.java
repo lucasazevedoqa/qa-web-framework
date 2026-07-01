@@ -1,26 +1,35 @@
 package com.lucas.qa.base;
 
-import com.lucas.qa.extensions.TestResultExtension; // Importa a extension
-import org.junit.jupiter.api.AfterEach;
+import com.lucas.qa.extensions.TestResultExtension;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith; // Importa a anotação do JUnit 5
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
-@ExtendWith(TestResultExtension.class) // Blinda a classe base com o observador de screenshots
+@ExtendWith(TestResultExtension.class)
 public class BaseTest {
 
     protected WebDriver driver;
+    private static final String URL_ALVO = "https://www.saucedemo.com";
 
     @BeforeEach
     public void setUp() {
-        // Sua configuração atual do WebDriver (ex: ChromeOptions, localizador, etc)
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://www.saucedemo.com");
+        // Configurações otimizadas para o navegador Chrome
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-notifications"); // Desativa pop-ups de notificação
+        options.addArguments("--remote-allow-origins=*"); // Evita problemas de CORS em atualizações do Chrome
+
+        // Inicialização do ecossistema do WebDriver
+        this.driver = new ChromeDriver(options);
+        this.driver.manage().window().maximize();
+        this.driver.get(URL_ALVO);
     }
 
-    // Método essencial para a Extension conseguir herdar o driver ativo do teste
+    /**
+     * Fornece o driver ativo para componentes externos.
+     * Essencial para que a TestResultExtension capture evidências antes de fechar o processo.
+     */
     public WebDriver getDriver() {
         return this.driver;
     }

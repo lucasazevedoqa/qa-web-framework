@@ -8,32 +8,39 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class LoginPage {
-    // 1. Variáveis da classe
-    private WebDriver driver;
-    private WebDriverWait wait;
 
-    // 2. Localizadores (Elementos da página)
-    private By userField = By.id("user-name");
-    private By passwordField = By.id("password");
-    private By loginButton = By.id("login-button");
-    private By errorMessage = By.cssSelector("[data-test='error']");
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
-    // 3. Construtor
+    // LOCALIZADORES (IDs nativos e estáveis)
+    private final By campoUsuario = By.id("user-name");
+    private final By campoSenha = By.id("password");
+    private final By botaoLogin = By.id("login-button");
+
+    // CORREÇÃO: Atualizado para a classe CSS estável do contêiner de erro do SauceDemo
+    private final By mensagemErro = By.className("error-message-container");
+
     public LoginPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(Config.TIMEOUT_PADRAO));
     }
 
-    // 4. Ações da página
-    public void realizaLogin(String usuario, String senha){
-        // Corrigido para usar 'userField' e 'passwordField' que você declarou acima
-        wait.until(ExpectedConditions.visibilityOfElementLocated(userField)).sendKeys(usuario);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField)).sendKeys(senha);
-        wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
+    /**
+     * Realiza o fluxo completo de autenticação na plataforma.
+     * @param usuario Nome de usuário para acesso
+     * @param senha Senha correspondente
+     */
+    public void realizarLogin(String usuario, String senha) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(campoUsuario)).sendKeys(usuario);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(campoSenha)).sendKeys(senha);
+        wait.until(ExpectedConditions.elementToBeClickable(botaoLogin)).click();
     }
 
-    public String obterMensagemErro(){
-        // Adicionado o wait aqui também para garantir que o erro apareceu antes de pegar o texto
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
+    /**
+     * Captura o texto do alerta de erro caso as credenciais sejam inválidas.
+     * @return String contendo o texto visível da mensagem de erro
+     */
+    public String obterMensagemDeErro() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(mensagemErro)).getText();
     }
 }

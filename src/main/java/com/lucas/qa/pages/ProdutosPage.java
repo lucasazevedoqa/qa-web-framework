@@ -8,33 +8,56 @@ import com.lucas.qa.config.Config;
 import java.time.Duration;
 
 public class ProdutosPage {
-    private WebDriver driver;
-    private WebDriverWait wait;
 
-    // Localizador do título da página de produtos (ex: "Products") para garantir que chegamos nela
-    private By barraTituloProdutos = By.cssSelector("[data-test='title']");
-    private By botaoAdiconarMochila = By.id("add-to-cart-sauce-labs-backpack");
-    private By badgeCarrinho = By.cssSelector("[data-test='shopping-cart-badge']");
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+
+    // LOCALIZADORES (Centralizados e imutáveis)
+    private final By barraTituloProdutos = By.cssSelector("[data-test='title']");
+    private final By botaoAdicionarMochila = By.id("add-to-cart-sauce-labs-backpack");
+    private final By badgeCarrinho = By.cssSelector("[data-test='shopping-cart-badge']");
 
     public ProdutosPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(Config.TIMEOUT_PADRAO));
     }
-    // Método que verifica se o título da página está visível e retorna o texto dele
+
+    /**
+     * Captura o título principal da página para validação de fluxo.
+     * @return String contendo o texto (ex: "Products")
+     */
     public String obterTituloPagina() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(barraTituloProdutos)).getText();
     }
 
-    public void adiconarMochilaAoCarrinho(){
-        wait.until(ExpectedConditions.elementToBeClickable(botaoAdiconarMochila)).click();
-
+    /**
+     * Adiciona especificamente a mochila ao carrinho de compras.
+     */
+    public void adicionarMochilaAoCarrinho() {
+        wait.until(ExpectedConditions.elementToBeClickable(botaoAdicionarMochila)).click();
     }
 
-    public String obterQuantidadeCarrinho(){
+    /**
+     * MÉTODO BONUS (Escalabilidade): Permite adicionar qualquer produto dinamicamente pelo nome formatado.
+     * Exemplo de uso: adicionarProdutoAoCarrinho("bike-light");
+     */
+    public void adicionarProdutoAoCarrinho(String nomeProdutoSlug) {
+        By seletorDinamico = By.id("add-to-cart-sauce-labs-" + nomeProdutoSlug);
+        wait.until(ExpectedConditions.elementToBeClickable(seletorDinamico)).click();
+    }
+
+    /**
+     * Recupera a quantidade de itens exibida no ícone do carrinho.
+     * @return String com o número de itens (ex: "1")
+     */
+    public String obterQuantidadeCarrinho() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(badgeCarrinho)).getText();
     }
 
-    public void acessarCarrinho(){
+    /**
+     * Clica no ícone do carrinho para direcionar o usuário à página de listagem de compras.
+     */
+    public void acessarCarrinho() {
         wait.until(ExpectedConditions.elementToBeClickable(badgeCarrinho)).click();
     }
 }

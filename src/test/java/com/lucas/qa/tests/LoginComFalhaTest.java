@@ -15,13 +15,13 @@ public class LoginComFalhaTest extends BaseTest {
         LoginPage loginPage = new LoginPage(driver);
 
         // Executar a ação
-        loginPage.realizaLogin(
+        loginPage.realizarLogin(
                 DadosDeTeste.USUARIO_VALIDO,
                 DadosDeTeste.SENHA_INVALIDA
         );
 
         // Captura a mensagem de erro exibida na tela
-        String mensagemErro = loginPage.obterMensagemErro();
+        String mensagemErro = loginPage.obterMensagemDeErro();
 
         // Verifica se a mensagem contém o texto esperado
         Assertions.assertTrue(

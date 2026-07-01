@@ -7,19 +7,27 @@ import com.lucas.qa.pages.ProdutosPage;
 import com.lucas.qa.pages.CarrinhoPage;
 import com.lucas.qa.pages.CheckoutInformationPage;
 import com.lucas.qa.pages.CheckoutOverviewPage;
-import com.lucas.qa.pages.CheckoutCompletePage; // 1. Importa a nova página final
+import com.lucas.qa.pages.CheckoutCompletePage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Classe responsável por agrupar os cenários de testes funcionais
+ * relacionados à inclusão de itens no carrinho e fluxo de compra.
+ */
 public class AdicionarProdutoAoCarrinho extends BaseTest {
 
+    /**
+     * Valida o fluxo de ponta a ponta da compra de um produto,
+     * desde a autenticação até a validação da tela final de sucesso.
+     */
     @Test
     void deveAdicionarProdutoAoCarrinhoComSucesso() {
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.realizaLogin(DadosDeTeste.USUARIO_VALIDO, DadosDeTeste.SENHA_VALIDA);
+        loginPage.realizarLogin(DadosDeTeste.USUARIO_VALIDO, DadosDeTeste.SENHA_VALIDA);
 
         ProdutosPage produtosPage = new ProdutosPage(driver);
-        produtosPage.adiconarMochilaAoCarrinho();
+        produtosPage.adicionarMochilaAoCarrinho();
         produtosPage.acessarCarrinho();
 
         CarrinhoPage carrinhoPage = new CarrinhoPage(driver);
@@ -35,11 +43,9 @@ public class AdicionarProdutoAoCarrinho extends BaseTest {
         Assertions.assertTrue(precoTexto.contains("29.99"), "O valor total do item exibido na revisão está incorreto!");
         overviewPage.finalizarCompra();
 
-        // 2. Instancia a tela de sucesso final
         CheckoutCompletePage completePage = new CheckoutCompletePage(driver);
-
-        // 3. Captura o texto de agradecimento e valida a finalização real
         String mensagemFinal = completePage.obterMensagemDeSucesso();
+
         Assertions.assertEquals(
                 "Thank you for your order!",
                 mensagemFinal,
