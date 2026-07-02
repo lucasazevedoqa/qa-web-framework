@@ -30,55 +30,27 @@ public class CheckoutInformationPage {
      * Preenche os dados do cliente e prossegue para a próxima etapa do checkout.
      */
     public void preencherDadosEContinuar(String nome, String sobrenome, String cep) {
+        // 1. Aguarda e localiza os elementos de forma simples
+        WebElement inputNome = wait.until(ExpectedConditions.visibilityOfElementLocated(campoNome));
+        WebElement inputSobrenome = wait.until(ExpectedConditions.visibilityOfElementLocated(campoSobrenome));
+        WebElement inputCep = wait.until(ExpectedConditions.visibilityOfElementLocated(campoCep));
+        WebElement botao = wait.until(ExpectedConditions.elementToBeClickable(botaoContinuar));
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        WebElement inputNome = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(campoNome));
-
-        WebElement inputSobrenome = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(campoSobrenome));
-
-        WebElement inputCep = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(campoCep));
-
-        WebElement botao = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(botaoContinuar));
-
-        // Centraliza o botão na tela
-        js.executeScript("arguments[0].scrollIntoView({block:'center'});", botao);
-
-        // Nome
+        // 2. Preenche os campos limpando antes de digitar
         inputNome.clear();
         inputNome.sendKeys(nome);
 
-        // Sobrenome
         inputSobrenome.clear();
         inputSobrenome.sendKeys(sobrenome);
 
-        // CEP
+        // 3. Preenchimento do CEP direto, sem dar o método .click() antes (que pode estar tirando o foco)
         inputCep.clear();
         inputCep.sendKeys(cep);
 
-        // Aguarda o valor realmente ser preenchido
-        wait.until(driver ->
-                cep.equals(inputCep.getAttribute("value")));
-
-        // Aguarda botão habilitado e clicável
-        wait.until(ExpectedConditions.elementToBeClickable(botao));
-
-        // Clica normalmente
+        // 4. Clique padrão via Selenium
         botao.click();
 
-        // Caso o clique não funcione (comum em CI/CD), tenta via JavaScript
-        if (!driver.getCurrentUrl().contains("checkout-step-two.html")) {
-
-            wait.until(ExpectedConditions.elementToBeClickable(botao));
-
-            js.executeScript("arguments[0].click();", botao);
-        }
-
-        // Aguarda a mudança de página
+        // 5. Aguarda a transição de página simples
         wait.until(ExpectedConditions.urlContains("checkout-step-two.html"));
     }
 }
