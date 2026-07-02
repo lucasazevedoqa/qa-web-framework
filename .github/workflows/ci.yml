@@ -1,30 +1,41 @@
-name: Java CI with Maven and Selenium
+name: Java CI - Maven Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
+      - "fix/**"
+      - "feature/**"
+      - "refactor/**"
+
   pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
 
 jobs:
   test:
+    name: Run Maven Tests
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar o código do repositório
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configurar o Java 21
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: 17
           cache: maven
 
-      - name: Instalar o Google Chrome e WebDriver
+      - name: Check project structure
         run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          echo "Diretório atual:"
+          pwd
+          echo "Arquivos encontrados:"
+          ls -la
 
-      - name: Executar os Testes Automatizados
+      - name: Run Maven tests
         run: mvn clean test
