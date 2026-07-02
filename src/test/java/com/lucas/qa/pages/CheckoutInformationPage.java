@@ -27,18 +27,37 @@ public class CheckoutInformationPage {
     /**
      * Preenche o formulário de dados do cliente e prossegue no fluxo de checkout
      * utilizando uma chamada nativa de JavaScript para acionar o botão de avanço.
-     * * @param nome Nome do comprador
+     * @param nome Nome do comprador
      * @param sobrenome Sobrenome do comprador
      * @param cep Código postal/CEP do endereço de entrega
      */
     public void preencherDadosEContinuar(String nome, String sobrenome, String cep) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(campoNome)).sendKeys(nome);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(campoSobrenome)).sendKeys(sobrenome);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(campoCep)).sendKeys(cep);
-
-        WebElement botao = wait.until(ExpectedConditions.elementToBeClickable(botaoContinuar));
-
         JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // 1. Localiza os elementos garantindo a presença no HTML
+        WebElement inputNome = wait.until(ExpectedConditions.presenceOfElementLocated(campoNome));
+        WebElement inputSobrenome = wait.until(ExpectedConditions.presenceOfElementLocated(campoSobrenome));
+        WebElement inputCep = wait.until(ExpectedConditions.presenceOfElementLocated(campoCep));
+        WebElement botao = wait.until(ExpectedConditions.presenceOfElementLocated(botaoContinuar));
+
+        // 2. Centraliza o botão na tela para garantir renderização correta em modo headless
+        js.executeScript("arguments[0].scrollIntoView({block: 'center'});", botao);
+
+        // 3. Preenche os campos garantindo visibilidade e limpando resíduos
+        wait.until(ExpectedConditions.visibilityOf(inputNome)).clear();
+        inputNome.sendKeys(nome);
+
+        wait.until(ExpectedConditions.visibilityOf(inputSobrenome)).clear();
+        inputSobrenome.sendKeys(sobrenome);
+
+        wait.until(ExpectedConditions.visibilityOf(inputCep)).clear();
+        inputCep.sendKeys(cep);
+
+        // 4. Aguarda o botão ficar totalmente clicável e dispara o clique via JS
+        wait.until(ExpectedConditions.elementToBeClickable(botao));
         js.executeScript("arguments[0].click();", botao);
+
+        // 5. Proteção CI: Aguarda a transição de página (a URL muda de step-one para step-two)
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("checkout-step-one")));
     }
 }
