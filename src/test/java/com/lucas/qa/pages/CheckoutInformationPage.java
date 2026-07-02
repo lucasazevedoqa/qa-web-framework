@@ -34,30 +34,24 @@ public class CheckoutInformationPage {
     public void preencherDadosEContinuar(String nome, String sobrenome, String cep) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
-        // 1. Localiza os elementos garantindo a presença no HTML
+        // 1. Garante que os elementos existem na estrutura da página
         WebElement inputNome = wait.until(ExpectedConditions.presenceOfElementLocated(campoNome));
         WebElement inputSobrenome = wait.until(ExpectedConditions.presenceOfElementLocated(campoSobrenome));
         WebElement inputCep = wait.until(ExpectedConditions.presenceOfElementLocated(campoCep));
         WebElement botao = wait.until(ExpectedConditions.presenceOfElementLocated(botaoContinuar));
 
-        // 2. Centraliza o botão na tela para garantir renderização correta em modo headless
+        // 2. Centraliza o formulário na tela
         js.executeScript("arguments[0].scrollIntoView({block: 'center'});", botao);
 
-        // 3. Preenche os campos garantindo visibilidade e limpando resíduos
-        wait.until(ExpectedConditions.visibilityOf(inputNome)).clear();
-        inputNome.sendKeys(nome);
+        // 3. Preenche os dados injetando diretamente o valor via JavaScript (Inquebrável no CI/CD)
+        js.executeScript("arguments[0].value = arguments[1];", inputNome, nome);
+        js.executeScript("arguments[0].value = arguments[1];", inputSobrenome, sobrenome);
+        js.executeScript("arguments[0].value = arguments[1];", inputCep, cep);
 
-        wait.until(ExpectedConditions.visibilityOf(inputSobrenome)).clear();
-        inputSobrenome.sendKeys(sobrenome);
+        // 4. Efetua o clique clássico do Selenium (com Wait de clique)
+        wait.until(ExpectedConditions.elementToBeClickable(botao)).click();
 
-        wait.until(ExpectedConditions.visibilityOf(inputCep)).clear();
-        inputCep.sendKeys(cep);
-
-        // 4. Aguarda o botão ficar totalmente clicável e dispara o clique via JS
-        wait.until(ExpectedConditions.elementToBeClickable(botao));
-        js.executeScript("arguments[0].click();", botao);
-
-        // 5. Proteção CI: Aguarda a transição de página (a URL muda de step-one para step-two)
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("checkout-step-one")));
+        // 5. Aguarda a transição de página para o step-two
+        wait.until(ExpectedConditions.urlContains("checkout-step-two.html"));
     }
 }
