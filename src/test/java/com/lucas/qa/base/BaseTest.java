@@ -15,14 +15,29 @@ public class BaseTest {
 
     @BeforeEach
     public void setUp() {
-        // Configurações otimizadas para o navegador Chrome
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-notifications"); // Desativa pop-ups de notificação
-        options.addArguments("--remote-allow-origins=*"); // Evita problemas de CORS em atualizações do Chrome
+        options.addArguments("--disable-notifications");
+        options.addArguments("--remote-allow-origins=*");
+
+        // Detecta se está rodando na nuvem do GitHub Actions
+        boolean isCI = System.getenv("GITHUB_ACTIONS") != null;
+
+        if (isCI) {
+            options.addArguments("--headless=new"); // Roda em segundo plano sem tela
+            options.addArguments("--disable-gpu");  // Desativa aceleração de hardware (necessário em Linux CI)
+            options.addArguments("--window-size=1920,1080"); // Define um tamanho de tela padrão para os prints
+            options.addArguments("--no-sandbox"); // Evita problemas de permissão no Linux do GitHub
+            options.addArguments("--disable-dev-shm-usage"); // Evita estouro de memória compartilhada no container
+        }
 
         // Inicialização do ecossistema do WebDriver
         this.driver = new ChromeDriver(options);
-        this.driver.manage().window().maximize();
+
+        // Só maximiza se não estiver em modo Headless (evita warnings no log)
+        if (!isCI) {
+            this.driver.manage().window().maximize();
+        }
+
         this.driver.get(URL_ALVO);
     }
 
