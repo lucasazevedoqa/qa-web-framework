@@ -1,13 +1,15 @@
 package com.lucas.qa.pages;
 
+import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.lucas.qa.config.Config;
-import java.time.Duration;
 
 public class CheckoutInformationPage {
 
@@ -17,7 +19,7 @@ public class CheckoutInformationPage {
     private final By campoNome = By.id("first-name");
     private final By campoSobrenome = By.id("last-name");
     private final By campoCep = By.id("postal-code");
-    private final By botaoContinuar = By.cssSelector("[data-test='continue']");
+    private final By botaoContinuar = By.id("continue");
 
     public CheckoutInformationPage(WebDriver driver) {
         this.driver = driver;
@@ -25,33 +27,58 @@ public class CheckoutInformationPage {
     }
 
     /**
-     * Preenche o formulário de dados do cliente e prossegue no fluxo de checkout
-     * utilizando uma chamada nativa de JavaScript para acionar o botão de avanço.
-     * @param nome Nome do comprador
-     * @param sobrenome Sobrenome do comprador
-     * @param cep Código postal/CEP do endereço de entrega
+     * Preenche os dados do cliente e prossegue para a próxima etapa do checkout.
      */
     public void preencherDadosEContinuar(String nome, String sobrenome, String cep) {
+
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
-        // 1. Garante que os elementos existem na estrutura da página
-        WebElement inputNome = wait.until(ExpectedConditions.presenceOfElementLocated(campoNome));
-        WebElement inputSobrenome = wait.until(ExpectedConditions.presenceOfElementLocated(campoSobrenome));
-        WebElement inputCep = wait.until(ExpectedConditions.presenceOfElementLocated(campoCep));
-        WebElement botao = wait.until(ExpectedConditions.presenceOfElementLocated(botaoContinuar));
+        WebElement inputNome = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(campoNome));
 
-        // 2. Centraliza o formulário na tela
-        js.executeScript("arguments[0].scrollIntoView({block: 'center'});", botao);
+        WebElement inputSobrenome = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(campoSobrenome));
 
-        // 3. Preenche os dados injetando diretamente o valor via JavaScript (Inquebrável no CI/CD)
-        js.executeScript("arguments[0].value = arguments[1];", inputNome, nome);
-        js.executeScript("arguments[0].value = arguments[1];", inputSobrenome, sobrenome);
-        js.executeScript("arguments[0].value = arguments[1];", inputCep, cep);
+        WebElement inputCep = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(campoCep));
 
-        // 4. Efetua o clique clássico do Selenium (com Wait de clique)
-        wait.until(ExpectedConditions.elementToBeClickable(botao)).click();
+        WebElement botao = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(botaoContinuar));
 
-        // 5. Aguarda a transição de página para o step-two
+        // Centraliza o botão na tela
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", botao);
+
+        // Nome
+        inputNome.clear();
+        inputNome.sendKeys(nome);
+
+        // Sobrenome
+        inputSobrenome.clear();
+        inputSobrenome.sendKeys(sobrenome);
+
+        // CEP
+        inputCep.clear();
+        inputCep.sendKeys(cep);
+
+        // Aguarda o valor realmente ser preenchido
+        wait.until(driver ->
+                cep.equals(inputCep.getAttribute("value")));
+
+        // Aguarda botão habilitado e clicável
+        wait.until(ExpectedConditions.elementToBeClickable(botao));
+
+        // Clica normalmente
+        botao.click();
+
+        // Caso o clique não funcione (comum em CI/CD), tenta via JavaScript
+        if (!driver.getCurrentUrl().contains("checkout-step-two.html")) {
+
+            wait.until(ExpectedConditions.elementToBeClickable(botao));
+
+            js.executeScript("arguments[0].click();", botao);
+        }
+
+        // Aguarda a mudança de página
         wait.until(ExpectedConditions.urlContains("checkout-step-two.html"));
     }
 }
