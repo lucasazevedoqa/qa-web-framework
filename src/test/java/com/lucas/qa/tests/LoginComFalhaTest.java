@@ -2,32 +2,33 @@ package com.lucas.qa.tests;
 
 import com.lucas.qa.base.BaseTest;
 import com.lucas.qa.config.DadosDeTeste;
+import com.lucas.qa.pages.LoginPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import com.lucas.qa.pages.LoginPage;
 
 public class LoginComFalhaTest extends BaseTest {
 
     @Test
-    void validarLoginComSucesso() {
-
-        // Criar o objeto da página (aqui conectamos o navegador a página)
+    void deveExibirMensagemDeErroAoRealizarLoginComSenhaInvalida() {
+        // Arrange
         LoginPage loginPage = new LoginPage(driver);
 
-        // Executar a ação
+        // Act
         loginPage.realizarLogin(
                 DadosDeTeste.USUARIO_VALIDO,
                 DadosDeTeste.SENHA_INVALIDA
         );
 
-        // Captura a mensagem de erro exibida na tela
-        String mensagemErro = loginPage.obterMensagemDeErro();
+        String mensagemErroAtual = loginPage.obterMensagemDeErro();
 
-        // Verifica se a mensagem contém o texto esperado
+        // Assert
         Assertions.assertTrue(
-                mensagemErro.contains(DadosDeTeste.MSG_ERRO_LOGIN_INVALIDO),
-                "A mensagem de erro exibida na tela foi diferente da esperada"
+                mensagemErroAtual.contains(DadosDeTeste.MSG_ERRO_LOGIN_INVALIDO),
+                String.format(
+                        "Mensagem de erro diferente da esperada. Esperado conter: '%s'. Atual: '%s'.",
+                        DadosDeTeste.MSG_ERRO_LOGIN_INVALIDO,
+                        mensagemErroAtual
+                )
         );
-
     }
 }
