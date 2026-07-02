@@ -17,6 +17,7 @@ public class ProdutosPage {
 
     private final By tituloPaginaProdutos = By.className("title");
     private final By botaoAdicionarMochila = By.id("add-to-cart-sauce-labs-backpack");
+    private final By botaoRemoverMochila = By.id("remove-sauce-labs-backpack");
     private final By badgeCarrinho = By.cssSelector("[data-test='shopping-cart-badge']");
     private final By linkCarrinho = By.cssSelector("a.shopping_cart_link");
 
@@ -30,7 +31,25 @@ public class ProdutosPage {
     }
 
     public void adicionarMochilaAoCarrinho() {
-        wait.until(ExpectedConditions.elementToBeClickable(botaoAdicionarMochila)).click();
+        wait.until(ExpectedConditions.urlContains("inventory.html"));
+
+        WebElement botaoAdicionar = wait.until(
+                ExpectedConditions.presenceOfElementLocated(botaoAdicionarMochila)
+        );
+
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center'});",
+                botaoAdicionar
+        );
+
+        wait.until(ExpectedConditions.elementToBeClickable(botaoAdicionarMochila));
+
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].click();",
+                botaoAdicionar
+        );
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(botaoRemoverMochila));
         wait.until(ExpectedConditions.visibilityOfElementLocated(badgeCarrinho));
     }
 
@@ -39,7 +58,9 @@ public class ProdutosPage {
     }
 
     public void acessarCarrinho() {
-        WebElement carrinho = wait.until(ExpectedConditions.presenceOfElementLocated(linkCarrinho));
+        WebElement carrinho = wait.until(
+                ExpectedConditions.presenceOfElementLocated(linkCarrinho)
+        );
 
         ((JavascriptExecutor) driver).executeScript(
                 "arguments[0].scrollIntoView({block: 'center'});",
