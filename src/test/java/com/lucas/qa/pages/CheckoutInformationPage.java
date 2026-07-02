@@ -19,6 +19,7 @@ public class CheckoutInformationPage {
     private final By campoSobrenome = By.id("last-name");
     private final By campoCep = By.id("postal-code");
     private final By botaoContinue = By.id("continue");
+    private final By mensagemErro = By.cssSelector("[data-test='error']");
 
     public CheckoutInformationPage(WebDriver driver) {
         this.driver = driver;
@@ -35,9 +36,22 @@ public class CheckoutInformationPage {
         preencherCampo(campoSobrenome, sobrenome);
         preencherCampo(campoCep, cep);
 
+        validarValorCampo(campoNome, nome);
+        validarValorCampo(campoSobrenome, sobrenome);
+        validarValorCampo(campoCep, cep);
+
         clicarContinuar();
 
-        wait.until(ExpectedConditions.urlContains("checkout-step-two.html"));
+        wait.until(ExpectedConditions.or(
+                ExpectedConditions.urlContains("checkout-step-two.html"),
+                ExpectedConditions.visibilityOfElementLocated(mensagemErro)
+        ));
+
+        if (driver.getCurrentUrl().contains("checkout-step-one.html")
+                && !driver.findElements(mensagemErro).isEmpty()) {
+            String erro = driver.findElement(mensagemErro).getText();
+            throw new RuntimeException("Checkout não avançou. Erro exibido na tela: " + erro);
+        }
     }
 
     private void preencherCampo(By localizador, String valor) {
@@ -45,6 +59,20 @@ public class CheckoutInformationPage {
 
         campo.clear();
         campo.sendKeys(valor);
+
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].value = arguments[1];" +
+                        "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));" +
+                        "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+                campo,
+                valor
+        );
+    }
+
+    private void validarValorCampo(By localizador, String valorEsperado) {
+        WebElement campo = wait.until(ExpectedConditions.visibilityOfElementLocated(localizador));
+
+        wait.until(driver -> valorEsperado.equals(campo.getAttribute("value")));
     }
 
     private void clicarContinuar() {
