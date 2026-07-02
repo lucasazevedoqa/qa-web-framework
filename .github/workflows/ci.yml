@@ -24,10 +24,10 @@ jobs:
       - name: Instalar o Google Chrome e WebDriver
         run: |
           sudo apt-get update
-          - uses: browser-actions/setup-chrome@v1
+          sudo apt-get install -y google-chrome-stable
 
       - name: Executar os Testes Automatizados
-        run: mvn clean test
+        run: mvn clean test -DargLine="-Djava.awt.headless=true"
 
       # --- O PASSO NOVO ENTRA AQUI ---
       - name: Salvar Evidências de Teste (Prints)

@@ -25,19 +25,20 @@ public class BaseTest {
 
         if (isCI) {
             options.addArguments("--headless=new"); // Roda em segundo plano sem tela
-            options.addArguments("--disable-gpu");  // Desativa aceleração de hardware (necessário em Linux CI)
-            options.addArguments("--window-size=1920,1080"); // Define um tamanho de tela padrão para os prints
-            options.addArguments("--no-sandbox"); // Evita problemas de permissão no Linux do GitHub
-            options.addArguments("--disable-dev-shm-usage"); // Evita estouro de memória compartilhada no container
+            options.addArguments("--disable-gpu");  // Desativa aceleração de hardware
+            options.addArguments("--window-size=1920,1080"); // Define um tamanho de tela padrão
+            options.addArguments("--no-sandbox"); // Evita problemas de permissão no Linux
+            options.addArguments("--disable-dev-shm-usage"); // Evita estouro de memória
         }
 
         // Inicialização do ecossistema do WebDriver
         this.driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+        // REMOVIDO: implicitlyWait retirado para não conflitar com WebDriverWait
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
         driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
 
-        // Só maximiza se não estiver em modo Headless (evita warnings no log)
+        // Só maximiza se não estiver em modo Headless
         if (!isCI) {
             this.driver.manage().window().maximize();
         }
