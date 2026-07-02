@@ -2,7 +2,9 @@ package com.lucas.qa.pages;
 
 import com.lucas.qa.config.Config;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -32,6 +34,23 @@ public class CarrinhoPage {
 
     public void iniciarCheckout() {
         wait.until(ExpectedConditions.urlContains("cart.html"));
-        wait.until(ExpectedConditions.elementToBeClickable(botaoCheckout)).click();
+
+        WebElement checkout = wait.until(
+                ExpectedConditions.presenceOfElementLocated(botaoCheckout)
+        );
+
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center'});",
+                checkout
+        );
+
+        wait.until(ExpectedConditions.elementToBeClickable(botaoCheckout));
+
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].click();",
+                checkout
+        );
+
+        wait.until(ExpectedConditions.urlContains("checkout-step-one.html"));
     }
 }

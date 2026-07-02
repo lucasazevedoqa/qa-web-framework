@@ -20,10 +20,7 @@ public class CheckoutInformationPage {
 
     public CheckoutInformationPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(
-                driver,
-                Duration.ofSeconds(Config.TIMEOUT_PADRAO)
-        );
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(Config.TIMEOUT_PADRAO));
     }
 
     public void preencherDadosEContinuar(String nome, String sobrenome, String cep) {
