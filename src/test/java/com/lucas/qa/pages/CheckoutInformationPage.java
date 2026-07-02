@@ -30,25 +30,29 @@ public class CheckoutInformationPage {
      * Preenche os dados do cliente e prossegue para a próxima etapa do checkout.
      */
     public void preencherDadosEContinuar(String nome, String sobrenome, String cep) {
-        // 1. Aguarda e localiza os elementos de forma simples
+        // 1. Aguarda a estabilização da página
+        wait.until(ExpectedConditions.titleContains("Swag Labs"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("cancel")));
+
+        // 2. Localiza os elementos
         WebElement inputNome = wait.until(ExpectedConditions.visibilityOfElementLocated(campoNome));
         WebElement inputSobrenome = wait.until(ExpectedConditions.visibilityOfElementLocated(campoSobrenome));
         WebElement inputCep = wait.until(ExpectedConditions.visibilityOfElementLocated(campoCep));
-        WebElement botao = wait.until(ExpectedConditions.elementToBeClickable(botaoContinuar));
+        WebElement botao = wait.until(ExpectedConditions.presenceOfElementLocated(botaoContinuar));
 
-        // 2. Preenche os campos limpando antes de digitar
+        // 3. Preenche os dados (Lógica idêntica à que já está funcionando)
         inputNome.clear();
         inputNome.sendKeys(nome);
 
         inputSobrenome.clear();
         inputSobrenome.sendKeys(sobrenome);
 
-        // 3. Preenchimento do CEP direto, sem dar o método .click() antes (que pode estar tirando o foco)
         inputCep.clear();
         inputCep.sendKeys(cep);
 
-        // 4. Clique padrão via Selenium
-        botao.click();
+        // 4. O XEQUE-MATE: Força o clique via JavaScript direto no elemento do botão.
+        // Isso resolve o problema de o botão ser ignorado no modo headless da nuvem.
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", botao);
 
         // 5. Aguarda a transição de página simples
         wait.until(ExpectedConditions.urlContains("checkout-step-two.html"));

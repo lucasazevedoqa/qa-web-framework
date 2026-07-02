@@ -28,3 +28,12 @@ jobs:
 
       - name: Executar os Testes Automatizados
         run: mvn clean test -DargLine="-Djava.awt.headless=true"
+
+
+      - name: Salvar Evidências de Teste (Prints)
+        if: always() # Garante que vai salvar os prints mesmo se algum teste der erro!
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-dos-testes
+          path: evidencias/
+          retention-days: 5 # Guarda os arquivos por 5 dias antes de apagar automaticamente

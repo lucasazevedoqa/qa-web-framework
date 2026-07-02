@@ -4,6 +4,7 @@ import com.lucas.qa.extensions.TestResultExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.JavascriptExecutor; // <--- ESSE CARA AQUI!
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import java.time.Duration;
@@ -44,6 +45,18 @@ public class BaseTest {
         }
 
         this.driver.get(URL_ALVO);
+
+        // ... código anterior do seu BaseTest ...
+        this.driver.get(URL_ALVO);
+
+        // NOVO: Limpa completamente o cache de sessão para blindar a execução em lote no CI
+        try {
+            driver.manage().deleteAllCookies();
+            ((JavascriptExecutor) driver).executeScript("window.localStorage.clear();");
+            ((JavascriptExecutor) driver).executeScript("window.sessionStorage.clear();");
+        } catch (Exception e) {
+            // Previne falhas caso o navegador ainda não tenha carregado o contexto JS
+        }
     }
 
     /**
