@@ -40,7 +40,7 @@ public class CheckoutInformationPage {
         WebElement inputCep = wait.until(ExpectedConditions.visibilityOfElementLocated(campoCep));
         WebElement botao = wait.until(ExpectedConditions.presenceOfElementLocated(botaoContinuar));
 
-        // 3. Preenche os dados (Lógica idêntica à que já está funcionando)
+        // 3. Preenche os dados sequencialmente
         inputNome.clear();
         inputNome.sendKeys(nome);
 
@@ -50,11 +50,16 @@ public class CheckoutInformationPage {
         inputCep.clear();
         inputCep.sendKeys(cep);
 
-        // 4. O XEQUE-MATE: Força o clique via JavaScript direto no elemento do botão.
-        // Isso resolve o problema de o botão ser ignorado no modo headless da nuvem.
+        // 4. TRAVA DE SEGURANÇA PARA CI/CD:
+        // Garante que o Selenium só avança quando o texto estiver de fato fixado nos inputs do HTML
+        wait.until(ExpectedConditions.textToBePresentInElementValue(inputNome, nome));
+        wait.until(ExpectedConditions.textToBePresentInElementValue(inputSobrenome, sobrenome));
+        wait.until(ExpectedConditions.textToBePresentInElementValue(inputCep, cep));
+
+        // 5. Agora que os dados estão salvos nos campos, o clique via JS é 100% seguro
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", botao);
 
-        // 5. Aguarda a transição de página simples
+        // 6. Aguarda a transição de página simples
         wait.until(ExpectedConditions.urlContains("checkout-step-two.html"));
     }
 }
