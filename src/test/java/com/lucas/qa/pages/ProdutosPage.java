@@ -2,7 +2,9 @@ package com.lucas.qa.pages;
 
 import com.lucas.qa.config.Config;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,7 +18,7 @@ public class ProdutosPage {
     private final By tituloPaginaProdutos = By.className("title");
     private final By botaoAdicionarMochila = By.id("add-to-cart-sauce-labs-backpack");
     private final By badgeCarrinho = By.cssSelector("[data-test='shopping-cart-badge']");
-    private final By linkCarrinho = By.className("shopping_cart_link");
+    private final By linkCarrinho = By.cssSelector("a.shopping_cart_link");
 
     public ProdutosPage(WebDriver driver) {
         this.driver = driver;
@@ -37,7 +39,20 @@ public class ProdutosPage {
     }
 
     public void acessarCarrinho() {
-        wait.until(ExpectedConditions.elementToBeClickable(linkCarrinho)).click();
+        WebElement carrinho = wait.until(ExpectedConditions.presenceOfElementLocated(linkCarrinho));
+
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center'});",
+                carrinho
+        );
+
+        wait.until(ExpectedConditions.elementToBeClickable(linkCarrinho));
+
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].click();",
+                carrinho
+        );
+
         wait.until(ExpectedConditions.urlContains("cart.html"));
     }
 }
