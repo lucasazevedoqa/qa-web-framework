@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import java.time.Duration;
 
 @ExtendWith(TestResultExtension.class)
 public class BaseTest {
@@ -32,6 +33,9 @@ public class BaseTest {
 
         // Inicialização do ecossistema do WebDriver
         this.driver = new ChromeDriver(options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+        driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
 
         // Só maximiza se não estiver em modo Headless (evita warnings no log)
         if (!isCI) {
