@@ -14,6 +14,7 @@ public class CarrinhoPage {
     private final WebDriverWait wait;
 
     private final By tituloCarrinho = By.className("title");
+    private final By nomeProdutoNoCarrinho = By.className("inventory_item_name");
     private final By botaoCheckout = By.id("checkout");
 
     public CarrinhoPage(WebDriver driver) {
@@ -23,6 +24,10 @@ public class CarrinhoPage {
 
     public String obterTituloCarrinho() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(tituloCarrinho)).getText();
+    }
+
+    public String obterNomeProdutoNoCarrinho() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(nomeProdutoNoCarrinho)).getText();
     }
 
     public void iniciarCheckout() {

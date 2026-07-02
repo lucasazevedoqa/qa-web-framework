@@ -13,7 +13,8 @@ public class ProdutosPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private final By botaoAdicionarProduto = By.id("add-to-cart-sauce-labs-backpack");
+    private final By tituloPaginaProdutos = By.className("title");
+    private final By botaoAdicionarMochila = By.id("add-to-cart-sauce-labs-backpack");
     private final By badgeCarrinho = By.cssSelector("[data-test='shopping-cart-badge']");
     private final By linkCarrinho = By.className("shopping_cart_link");
 
@@ -22,8 +23,12 @@ public class ProdutosPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(Config.TIMEOUT_PADRAO));
     }
 
-    public void adicionarProdutoAoCarrinho() {
-        wait.until(ExpectedConditions.elementToBeClickable(botaoAdicionarProduto)).click();
+    public String obterTituloPagina() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(tituloPaginaProdutos)).getText();
+    }
+
+    public void adicionarMochilaAoCarrinho() {
+        wait.until(ExpectedConditions.elementToBeClickable(botaoAdicionarMochila)).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(badgeCarrinho));
     }
 
