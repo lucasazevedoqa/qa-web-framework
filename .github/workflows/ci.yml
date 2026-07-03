@@ -1,39 +1,41 @@
-name: Java CI with Maven and Selenium
+name: Java CI - Maven Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
+      - "fix/**"
+      - "feature/**"
+      - "refactor/**"
+
   pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
 
 jobs:
   test:
+    name: Run Maven Tests
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar o código do repositório
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configurar o Java 21
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: 21
           cache: maven
 
-      - name: Instalar o Google Chrome e WebDriver
+      - name: Check project structure
         run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          echo "Diretório atual:"
+          pwd
+          echo "Arquivos encontrados:"
+          ls -la
 
-      - name: Executar os Testes Automatizados
-        run: mvn clean test -DargLine="-Djava.awt.headless=true"
-
-
-      - name: Salvar Evidências de Teste (Prints)
-        if: always() # Garante que vai salvar os prints mesmo se algum teste der erro!
-        uses: actions/upload-artifact@v4
-        with:
-          name: evidencias-dos-testes
-          path: evidencias/
-          retention-days: 5 # Guarda os arquivos por 5 dias antes de apagar automaticamente
+      - name: Run Maven tests
+        run: mvn clean test
