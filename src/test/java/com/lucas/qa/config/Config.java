@@ -4,7 +4,7 @@ public class Config {
 
     // CONSTANTES GLOBAIS DE AMBIENTE
     public static final String URL_BASE = "https://www.saucedemo.com/";
-    public static final long TIMEOUT_PADRAO = 10;
+    public static final long TIMEOUT_PADRAO = 20;
 
     /**
      * Construtor privado para impedir a instanciação da classe.

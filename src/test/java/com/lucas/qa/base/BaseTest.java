@@ -23,11 +23,13 @@ public class BaseTest {
         boolean isCI = System.getenv("GITHUB_ACTIONS") != null;
 
         if (isCI) {
-            options.addArguments("--headless=new"); // Roda em segundo plano sem tela
-            options.addArguments("--disable-gpu");  // Desativa aceleração de hardware (necessário em Linux CI)
-            options.addArguments("--window-size=1920,1080"); // Define um tamanho de tela padrão para os prints
-            options.addArguments("--no-sandbox"); // Evita problemas de permissão no Linux do GitHub
-            options.addArguments("--disable-dev-shm-usage"); // Evita estouro de memória compartilhada no container
+            options.addArguments("--headless=new");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--window-size=1920,1080");
+            options.addArguments("--disable-extensions");
+            options.addArguments("--remote-allow-origins=*");
         }
 
         // Inicialização do ecossistema do WebDriver

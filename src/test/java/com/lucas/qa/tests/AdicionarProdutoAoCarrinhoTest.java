@@ -24,23 +24,49 @@ public class AdicionarProdutoAoCarrinhoTest extends BaseTest {
     @Test
     void deveAdicionarProdutoAoCarrinhoComSucesso() {
         LoginPage loginPage = new LoginPage(driver);
+        ProdutosPage produtosPage = new ProdutosPage(driver);
+
         loginPage.realizarLogin(DadosDeTeste.USUARIO_VALIDO, DadosDeTeste.SENHA_VALIDA);
 
-        ProdutosPage produtosPage = new ProdutosPage(driver);
         produtosPage.adicionarMochilaAoCarrinho();
+
+        Assertions.assertEquals(
+                "1",
+                produtosPage.obterQuantidadeItensCarrinho(),
+                "A quantidade de itens no carrinho está incorreta!"
+        );
+
         produtosPage.acessarCarrinho();
 
         CarrinhoPage carrinhoPage = new CarrinhoPage(driver);
+
+        Assertions.assertEquals(
+                "Your Cart",
+                carrinhoPage.obterTituloCarrinho(),
+                "O usuário não foi redirecionado para a página do carrinho!"
+        );
+
         String nomeProduto = carrinhoPage.obterNomeProdutoNoCarrinho();
-        Assertions.assertEquals("Sauce Labs Backpack", nomeProduto, "O produto no carrinho não é o esperado!");
+
+        Assertions.assertEquals(
+                "Sauce Labs Backpack",
+                nomeProduto,
+                "O produto no carrinho não é o esperado!"
+        );
+
         carrinhoPage.iniciarCheckout();
 
         CheckoutInformationPage checkoutInfoPage = new CheckoutInformationPage(driver);
-        checkoutInfoPage.preencherDadosEContinuar("Lucas", "Freitas", "38400-000");
+        checkoutInfoPage.preencherDadosEContinuar("Lucas", "Freitas", "38400000");
 
         CheckoutOverviewPage overviewPage = new CheckoutOverviewPage(driver);
         String precoTexto = overviewPage.obterValorTotalDoItem();
-        Assertions.assertTrue(precoTexto.contains("29.99"), "O valor total do item exibido na revisão está incorreto!");
+
+        Assertions.assertTrue(
+                precoTexto.contains("29.99"),
+                "O valor total do item exibido na revisão está incorreto!"
+        );
+
         overviewPage.finalizarCompra();
 
         CheckoutCompletePage completePage = new CheckoutCompletePage(driver);
