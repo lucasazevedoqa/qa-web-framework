@@ -12,7 +12,7 @@ Framework de automação de testes focado em aplicações Web, estruturado utili
 * **Automação Web:** Selenium WebDriver (v4.28.0)
 * **Relatórios de Execução:** Allure Report & AspectJ Weaver
 * **Captura de Evidências:** Apache Commons IO
-* **Integração Contínua:** GitHub Actions
+* **Integração Contínua:** GitHub Actions / Azure DevOps
 
 ---
 
@@ -52,7 +52,7 @@ allure serve allure-results
 
 ## 🔄 Integração Contínua (CI)
 
-O projeto conta com um pipeline de **Integração Contínua via GitHub Actions**, que executa toda a suíte de testes automaticamente a cada alteração no repositório, garantindo que o framework permaneça funcional a cada novo commit.
+O projeto conta com pipelines de **Integração Contínua via GitHub Actions e Azure DevOps**, que executam toda a suíte de testes automaticamente a cada alteração no repositório. O pipeline do Azure DevOps está configurado para rodar de forma estável com o Chrome em modo headless no agente `ubuntu-latest`.
 
 **Gatilhos de execução (`triggers`):**
 * `push` para as branches `main`, `master`, `fix/**`, `feature/**` e `refactor/**`
