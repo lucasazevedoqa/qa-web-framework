@@ -1,0 +1,62 @@
+# azure-pipelines.yml
+# Equivalente ao workflow do GitHub Actions (Java CI - Maven Tests)
+# Documentação oficial: https://learn.microsoft.com/azure/devops/pipelines/
+
+trigger:
+  branches:
+    include:
+      - main
+      - master
+      - fix/*
+      - feature/*
+      - refactor/*
+
+pr:
+  branches:
+    include:
+      - main
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'   # Equivalente ao "runs-on: ubuntu-latest" do GitHub Actions
+
+variables:
+  javaVersion: '21'
+
+steps:
+  # Equivalente ao "actions/checkout@v4" (na Azure, o checkout já é implícito,
+  # mas pode ser declarado explicitamente se precisar de mais controle)
+  - checkout: self
+
+  # Equivalente ao "actions/setup-java@v4"
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '$(javaVersion)'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'   # usa o JDK já disponível na imagem do agente
+
+  # Equivalente ao passo de debug "Check project structure"
+  - script: |
+      echo "Diretório atual:"
+      pwd
+      echo "Arquivos encontrados:"
+      ls -la
+    displayName: 'Check project structure'
+
+  # Equivalente ao "mvn clean test"
+  - task: Maven@4
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean test'
+      publishJUnitResults: true          # Azure já integra resultados JUnit nativamente
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '$(javaVersion)'
+
+  # Opcional: publicar allure-results como artefato do pipeline,
+  # já que Azure não tem "allure serve" nativo como o GitHub Actions
+  - task: PublishBuildArtifacts@1
+    condition: always()   # publica mesmo se os testes falharem, útil pra depuração
+    inputs:
+      PathtoPublish: 'allure-results'
+      ArtifactName: 'allure-results'
