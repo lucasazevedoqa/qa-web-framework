@@ -19,8 +19,10 @@ public class BaseTest {
         options.addArguments("--disable-notifications");
         options.addArguments("--remote-allow-origins=*");
 
-        // Detecta se está rodando na nuvem do GitHub Actions
-        boolean isCI = System.getenv("GITHUB_ACTIONS") != null;
+        // Detecta se está rodando em CI (GitHub Actions ou Azure DevOps) para aplicar headless no Linux.
+        boolean isCI = System.getenv("GITHUB_ACTIONS") != null
+                || System.getenv("TF_BUILD") != null
+                || System.getenv("CI") != null;
 
         if (isCI) {
             options.addArguments("--headless=new");
